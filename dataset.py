@@ -5,9 +5,6 @@ from typing import Dict
 from PIL import Image
 from torch.utils.data import Dataset
 
-random.seed(42)
-
-
 class AOKVQADataset(Dataset):
     def __init__(
         self,
@@ -48,8 +45,9 @@ class AOKVQADataset(Dataset):
     # ------------- helper functions -------------
     
     def _load_json(self):
-        with open(self._aokvqa_path(), "r") as f:
-            self.data = json.load(f)   
+        fp = self._aokvqa_path()
+        with open(fp, "r") as f:
+            return json.load(f)      
         
     def _aokvqa_path(self):
         return os.path.join(
