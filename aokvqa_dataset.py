@@ -1,5 +1,5 @@
 from PIL import Image
-from torch.utils.data import Dataset
+from torch.utils.data import Dataset, DataLoader
 from utils import load_json, coco_path
 
 
@@ -49,14 +49,16 @@ class AOKVQADataset(Dataset):
         return len(self.data)
 
     def __getitem__(self, index: int):
-        pixel_value = Image.open(coco_path(self.coco_dir, self.split, self.image_ids[index]))
-        pixel_value = pixel_value.convert("RGB")
+        image_path = coco_path(self.coco_dir, self.split, self.image_ids[index])
+        image = Image.open(image_path)
         if self.img_transform:
-            pixel_value = self.img_transform(pixel_value)
+            image = self.img_transform(image)
+        image = image.convert("RGB")
         
         return {
             "image_id": self.image_ids[index],
-            "pixel_values": pixel_value,
+            "image": image,
+            "image_path": image_path,
             "question_id": self.question_ids[index],
             "question": self.questions[index],
             "mc_choices_0": self.mc_choices_0[index],
@@ -70,6 +72,14 @@ class AOKVQADataset(Dataset):
                 if index < len(self.rationales) else None,
         }
 
+def get_dataloader(aokvqa_dir, coco_dir, split="train", batch_size=8, shuffle=True, num_workers=4):
+    from torchvision import transforms
+    transform = transforms.Compose([
+        transforms.Resize((224,224)),
+        transforms.ToTensor(),
+    ])
+    dataset = AOKVQADataset(aokvqa_dir, coco_dir, split, transform)
+    return DataLoader(dataset, batch_size=batch_size, shuffle=shuffle, num_workers=num_workers)
 
 if __name__ == "__main__":
     import random

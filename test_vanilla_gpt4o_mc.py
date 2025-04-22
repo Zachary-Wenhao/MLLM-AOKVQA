@@ -44,7 +44,8 @@ def test_vanilla_gpt4o_mc(question, mc_choices, image_path):
         messages=[
             {"role": "system", "content": "You are a visual question answering assistant. Given an image and a multiple-choice question, select the correct answer and provide a brief one-sentence rationale."},
             {"role": "user", "content": full_prompt}
-        ]
+        ],
+        temperature=0.0,
     )
     answer = response.choices[0].message.content.strip()
     return answer

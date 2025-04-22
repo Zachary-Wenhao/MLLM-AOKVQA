@@ -1,2 +1,2 @@
-aokvqa_dir: datasets/aokvqa
-coco_dir: datasets/coco
+aokvqa_dir: datasets/aokvqa/
+coco_dir: datasets/coco/
