@@ -1,2 +1,4 @@
 aokvqa_dir: datasets/aokvqa/
 coco_dir: datasets/coco/
+
+vision_model: Salesforce/blip2-flan-t5-xl
